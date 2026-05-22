@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "GhostWriter Review Responder",
+  "version": "1.0.0",
+  "description": "Instantly draft polished, on-brand replies to your Google Business and Yelp reviews using AI.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://business.google.com/*",
+    "https://www.yelp.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://business.google.com/*",
+        "https://www.yelp.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "GhostWriter Review Responder"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
