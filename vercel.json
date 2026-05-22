@@ -1,9 +1,3 @@
 {
-  "version": 2,
-  "routes": [
-    {
-      "src": "/api/route-draft",
-      "dest": "/api/route-draft.js"
-    }
-  ]
+  "version": 2
 }
