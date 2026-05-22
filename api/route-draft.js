@@ -1,10 +1,3 @@
-// api/route-draft.js
-// Vercel Serverless Function — Node.js runtime
-// ✅ Correct deploy path: /api/route-draft
-
-// ✅ CommonJS export — required for plain Vercel projects (no Next.js)
-// ✅ Removed "export const config" ESM syntax that breaks plain Vercel functions
-
 function setCorsHeaders(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -20,7 +13,9 @@ function buildSystemPrompt(brandTone) {
     formal: `You are a formal business representative responding to a customer review. Maintain a strict professional register. Use complete sentences, avoid contractions, and project authority and competence at all times.`,
   };
 
-  const toneKey = Object.keys(toneInstructions).includes(brandTone) ? brandTone : "professional";
+  const toneKey = Object.keys(toneInstructions).includes(brandTone)
+    ? brandTone
+    : "professional";
 
   return `${toneInstructions[toneKey]}
 
@@ -37,7 +32,6 @@ Rules you must follow without exception:
 8. Never fabricate specific facts, promotions, or names not present in the review.`;
 }
 
-// ✅ module.exports instead of "export default" — this is what Vercel needs for plain projects
 module.exports = async function handler(req, res) {
   setCorsHeaders(res);
 
@@ -48,8 +42,6 @@ module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed." });
   }
-
-  // ── 1. Parse and Validate Body ───────────────────────────────────────────
 
   let email, reviewText;
   try {
@@ -70,8 +62,6 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: "Review text exceeds maximum length of 5000 characters." });
   }
 
-  // ── 2. Query Supabase ────────────────────────────────────────────────────
-
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -87,8 +77,8 @@ module.exports = async function handler(req, res) {
       {
         method: "GET",
         headers: {
-          "apikey": supabaseServiceKey,
-          "Authorization": `Bearer ${supabaseServiceKey}`,
+          apikey: supabaseServiceKey,
+          Authorization: `Bearer ${supabaseServiceKey}`,
           "Content-Type": "application/json",
         },
       }
@@ -105,15 +95,11 @@ module.exports = async function handler(req, res) {
     return res.status(502).json({ error: "Could not reach the database. Please try again shortly." });
   }
 
-  // ── 3. Gatekeeper: Check Subscription ───────────────────────────────────
-
   if (!profile || profile.subscription_status !== "active") {
     return res.status(403).json({
       error: "Subscription inactive. Please click the GhostWriter icon or check your Stripe Portal to activate your $5/mo account.",
     });
   }
-
-  // ── 4. Call Anthropic API ────────────────────────────────────────────────
 
   const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
   if (!anthropicApiKey) {
@@ -166,8 +152,6 @@ module.exports = async function handler(req, res) {
     console.error("[GhostWriter] Anthropic fetch exception:", err);
     return res.status(502).json({ error: "Could not reach the AI service. Please check your connection and try again." });
   }
-
-  // ── 5. Return Success ────────────────────────────────────────────────────
 
   return res.status(200).json({ replyText: generatedReply });
 };
