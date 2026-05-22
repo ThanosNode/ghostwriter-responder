@@ -1,5 +1,5 @@
 (async () => {
-  const VERCEL_API_URL = "https://vercel.com/astonct-gmailcoms-projects/ghostwriter-responder/3dZfM5GQoiy9jEwPYzvxoyu7H5nQ";
+  const VERCEL_API_URL = "https://ghostwriter-responder.vercel.app/api/route-draft";
 
   // ─── Platform Detection ───────────────────────────────────────────────────
 
