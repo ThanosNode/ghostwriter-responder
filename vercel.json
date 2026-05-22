@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "functions": {
+    "api/route-draft.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/route-draft",
+      "dest": "/api/route-draft.js"
+    }
+  ]
+}
