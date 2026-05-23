@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GhostWriter</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { width: 300px; font-family: Arial, sans-serif; background: #fff; padding: 20px; }
+    .logo { font-size: 18px; font-weight: 700; color: #1a73e8; margin-bottom: 4px; }
+    .tagline { font-size: 11px; color: #888; margin-bottom: 16px; }
+    label { font-size: 12px; font-weight: 600; color: #444; display: block; margin-bottom: 6px; }
+    input[type="email"] { width: 100%; padding: 8px 10px; font-size: 13px; border: 1px solid #ddd; border-radius: 4px; outline: none; margin-bottom: 10px; }
+    input[type="email"]:focus { border-color: #1a73e8; }
+    button { width: 100%; padding: 9px; background: #1a73e8; color: #fff; font-size: 13px; font-weight: 600; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #1765cc; }
+    .status { margin-top: 10px; font-size: 12px; text-align: center; min-height: 16px; }
+    .status.success { color: #1e8e3e; }
+    .status.error { color: #d93025; }
+    .divider { border: none; border-top: 1px solid #eee; margin: 14px 0; }
+    .info { font-size: 11px; color: #aaa; text-align: center; line-height: 1.5; }
+    .info a { color: #1a73e8; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="logo">✨ GhostWriter</div>
+  <div class="tagline">AI-powered review replies for Google & Yelp</div>
+  <label for="email">Your account email</label>
+  <input type="email" id="email" placeholder="you@example.com" />
+  <button id="saveBtn">Save Email</button>
+  <div class="status" id="status"></div>
+  <hr class="divider" />
+  <div class="info">
+    Manage your subscription at<br/>
+    <a href="https://billing.stripe.com" target="_blank">Stripe Customer Portal →</a>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
