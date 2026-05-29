@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GhostWriter — AI Review Replies for Google & Yelp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+  <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #1a73e8;
+      --blue-dark: #1254b8;
+      --blue-light: #e8f0fe;
+      --gold: #f59e0b;
+      --black: #0a0a0a;
+      --gray: #6b7280;
+      --gray-light: #f3f4f6;
+      --white: #ffffff;
+      --border: #e5e7eb;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--black);
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 48px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 38px; height: 38px;
+      background: var(--blue);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      flex-shrink: 0;
+    }
+
+    .nav-brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .nav-brand-name {
+      font-family: 'Instrument Serif', serif;
+      font-size: 20px;
+      color: var(--black);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-brand-sub {
+      font-size: 10px;
+      color: var(--gray);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .nav-cta {
+      background: var(--blue);
+      color: var(--white);
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .nav-cta:hover { background: var(--blue-dark); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, #e8f0fe 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 60%, #fef3c7 0%, transparent 60%);
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue-light);
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+      border: 1px solid rgba(26,115,232,0.2);
+    }
+
+    .hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(44px, 7vw, 80px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 em { font-style: italic; color: var(--blue); }
+
+    .hero p {
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--gray);
+      max-width: 560px;
+      margin: 0 auto 40px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--black);
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .btn-secondary:hover { border-color: var(--blue); transform: translateY(-1px); }
+
+    .hero-trust {
+      margin-top: 48px;
+      font-size: 13px;
+      color: var(--gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .hero-trust span { display: flex; align-items: center; gap: 6px; }
+    .check { color: #16a34a; }
+
+    /* MOCKUP */
+    .mockup-section {
+      padding: 0 24px 100px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .mockup {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+      max-width: 680px;
+      width: 100%;
+      overflow: hidden;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .mockup-header {
+      background: var(--gray-light);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mockup-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .mockup-dot:nth-child(1) { background: #ff5f57; }
+    .mockup-dot:nth-child(2) { background: #febc2e; }
+    .mockup-dot:nth-child(3) { background: #28c840; }
+
+    .mockup-url {
+      margin-left: 8px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 14px;
+      font-size: 12px;
+      color: var(--gray);
+      flex: 1;
+      max-width: 320px;
+    }
+
+    .mockup-body { padding: 28px; }
+
+    .review-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .reviewer { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+
+    .reviewer-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .reviewer-name { font-weight: 600; font-size: 14px; }
+    .stars { color: var(--gold); font-size: 13px; }
+    .review-text { font-size: 14px; color: var(--gray); line-height: 1.6; margin-bottom: 16px; }
+    .review-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+    .reply-btn {
+      font-size: 13px;
+      color: var(--blue);
+      font-weight: 500;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .gw-btn {
+      background: var(--blue);
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      animation: pulse-btn 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-btn {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(26,115,232,0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(26,115,232,0); }
+    }
+
+    .reply-box {
+      margin-top: 14px;
+      border: 1.5px solid var(--blue);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--black);
+      background: var(--blue-light);
+    }
+
+    .reply-box::before {
+      content: 'AI Reply — ready to post';
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    /* SHARED SECTION STYLES */
+    .section {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--gray);
+      max-width: 520px;
+      line-height: 1.65;
+      margin-bottom: 60px;
+    }
+
+    /* STEPS */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 32px;
+    }
+
+    .step {
+      padding: 32px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .step:hover { border-color: var(--blue); transform: translateY(-2px); }
+
+    .step-num {
+      width: 44px; height: 44px;
+      background: var(--blue-light);
+      color: var(--blue);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .step h3 { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+    .step p { font-size: 14px; color: var(--gray); line-height: 1.65; }
+
+    /* FEATURES */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+
+    .feature { padding: 28px; background: var(--gray-light); border-radius: 14px; }
+    .feature-icon { font-size: 28px; margin-bottom: 16px; }
+    .feature h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .feature p { font-size: 14px; color: var(--gray); line-height: 1.6; }
+
+    .tones { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+    .tone-pill {
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1.5px solid var(--border);
+      color: var(--black);
+      transition: all 0.15s;
+    }
+    .tone-pill:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+
+    /* TESTIMONIALS */
+    .testimonials {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .testimonial { padding: 28px; border: 1px solid var(--border); border-radius: 16px; }
+    .testimonial-stars { color: var(--gold); font-size: 15px; margin-bottom: 14px; }
+    .testimonial p { font-size: 15px; line-height: 1.65; color: var(--black); margin-bottom: 20px; font-style: italic; }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .testimonial-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 15px; flex-shrink: 0;
+    }
+    .testimonial-name { font-size: 14px; font-weight: 600; }
+    .testimonial-biz { font-size: 12px; color: var(--gray); }
+
+    /* ─────────────────────────────────────────
+       PRICING — fully symmetrical card system
+    ───────────────────────────────────────── */
+    .pricing-section {
+      background: #0a0a0a;
+      padding: 100px 24px;
+      text-align: center;
+    }
+
+    .pricing-section .section-label { color: var(--gold); }
+    .pricing-section .section-title { color: var(--white); }
+    .pricing-section .section-subtitle { color: #9ca3af; margin: 0 auto 12px; }
+
+    .pricing-note {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 52px;
+    }
+
+    /* Grid: two equal columns, fixed width, centred */
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 860px;
+      margin: 0 auto;
+      align-items: start; /* cards grow from top, never stretch each other */
+    }
+
+    /* Card shell — flex column so top/bottom sections stack cleanly */
+    .pricing-card {
+      display: flex;
+      flex-direction: column;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #2a2a2a;
+      position: relative;
+      transition: transform 0.2s, border-color 0.2s;
+      text-align: left;
+    }
+    .pricing-card:hover { transform: translateY(-3px); }
+    .pricing-card.featured { border-color: var(--blue); }
+
+    /* Best Value ribbon */
+    .pricing-badge {
+      position: absolute;
+      top: 0; right: 0;
+      background: var(--gold);
+      color: #000;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 0 20px 0 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    /* Dark top section — fixed layout, no stretching */
+    .pricing-card-top {
+      background: #141414;
+      padding: 36px 32px 28px;
+      flex-shrink: 0;
+    }
+    .pricing-card.featured .pricing-card-top { background: #0d1a30; }
+
+    .pricing-plan {
+      font-size: 11px;
+      font-weight: 700;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 18px;
+    }
+    .pricing-card.featured .pricing-plan { color: #60a5fa; }
+
+    .pricing-price {
+      font-family: 'Instrument Serif', serif;
+      font-size: 60px;
+      color: var(--white);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .pricing-price sup {
+      font-size: 24px;
+      vertical-align: super;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+    }
+
+    .pricing-period {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .pricing-saving {
+      display: inline-block;
+      background: rgba(245,158,11,0.15);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-top: 4px;
+    }
+
+    /* Trial badge — same fixed height on both cards */
+    .trial-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(34,197,94,0.12);
+      color: #22c55e;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 100px;
+      margin-top: 12px;
+      height: 28px;
+    }
+
+    .pricing-divider {
+      border: none;
+      border-top: 1px solid #2a2a2a;
+      margin: 24px 0;
+    }
+    .pricing-card.featured .pricing-divider { border-color: #1e3a5f; }
+
+    /* Feature list — identical structure on both cards */
+    .pricing-features {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: #d1d5db;
+      padding: 6px 0;
+      line-height: 1.5;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .pricing-features li:last-child { border-bottom: none; }
+
+    .pricing-features li .tick {
+      color: #22c55e;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-size: 13px;
+    }
+
+    /* White bottom — Stripe button lives here */
+    .pricing-card-bottom {
+      background: var(--white);
+      padding: 24px 32px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .pricing-card-bottom .fine-print {
+      font-size: 12px;
+      color: var(--gray);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    stripe-buy-button {
+      width: 100%;
+      display: block;
+    }
+
+    /* Placeholder shown in preview / sandbox environments */
+    .stripe-placeholder {
+      width: 100%;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.15s;
+    }
+    .stripe-placeholder:hover { background: var(--blue-dark); }
+
+    /* FAQ */
+    .faq { max-width: 680px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 24px 0; }
+    .faq-q { font-size: 16px; font-weight: 600; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .faq-a { font-size: 15px; color: var(--gray); line-height: 1.65; }
+
+    /* CTA */
+    .cta-banner { background: var(--blue); padding: 80px 24px; text-align: center; }
+    .cta-banner h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(32px, 5vw, 52px);
+      color: var(--white);
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .cta-banner p { font-size: 17px; color: rgba(255,255,255,0.8); margin-bottom: 36px; }
+    .btn-white {
+      background: var(--white);
+      color: var(--blue);
+      padding: 14px 36px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.15s;
+    }
+    .btn-white:hover { transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer { padding: 48px 24px; text-align: center; border-top: 1px solid var(--border); }
+    .footer-brand { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-bottom: 20px; }
+    .footer-brand-name { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--black); }
+    .footer-brand-sub { font-size: 11px; color: var(--gray); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+    .footer-links { display: flex; justify-content: center; gap: 28px; margin-bottom: 16px; flex-wrap: wrap; }
+    .footer-links a { font-size: 14px; color: var(--gray); text-decoration: none; }
+    .footer-links a:hover { color: var(--blue); }
+    .footer-copy { font-size: 13px; color: var(--gray); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 700px) {
+      nav { padding: 16px 20px; }
+      .hero { padding: 100px 20px 60px; }
+      .section { padding: 70px 20px; }
+      .pricing-cards {
+        grid-template-columns: 1fr;
+        max-width: 440px;
+      }
+      .pricing-card-top { padding: 28px 24px 20px; }
+      .pricing-card-bottom { padding: 20px 24px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">
+    <div class="nav-logo-icon">✨</div>
+    <div class="nav-brand-text">
+      <span class="nav-brand-name">GhostWriter</span>
+      <span class="nav-brand-sub">by Aldershot</span>
+    </div>
+  </a>
+  <a href="#pricing" class="nav-cta">Start Free Trial →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">✦ Chrome Extension for Google Business &amp; Yelp</div>
+    <h1>Reply to reviews in<br/><em>seconds, not hours</em></h1>
+    <p>GhostWriter drafts polished, on-brand responses to your customer reviews with one click — powered by AI, tailored to your tone.</p>
+    <div class="hero-actions">
+      <a href="#pricing" class="btn-primary">Start Free Trial →</a>
+      <a href="#how-it-works" class="btn-secondary">See how it works</a>
+    </div>
+    <div class="hero-trust">
+      <span><span class="check">✓</span> Free trial on every plan</span>
+      <span><span class="check">✓</span> Cancel anytime</span>
+      <span><span class="check">✓</span> From $6/month</span>
+      <span><span class="check">✓</span> No contracts</span>
+    </div>
+  </div>
+</section>
+
+<!-- MOCKUP -->
+<div class="mockup-section">
+  <div class="mockup">
+    <div class="mockup-header">
+      <div class="mockup-dot"></div>
+      <div class="mockup-dot"></div>
+      <div class="mockup-dot"></div>
+      <div class="mockup-url">business.google.com/reviews</div>
+    </div>
+    <div class="mockup-body">
+      <div class="review-card">
+        <div class="reviewer">
+          <div class="reviewer-avatar">S</div>
+          <div>
+            <div class="reviewer-name">Sarah M.</div>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+        <div class="review-text">"Absolutely incredible service! The staff went above and beyond. Best experience I've had in years — will definitely be back!"</div>
+        <div class="review-actions">
+          <button class="reply-btn">Reply</button>
+          <button class="gw-btn">✨ Draft Smart Reply</button>
+        </div>
+        <div class="reply-box">Thank you so much, Sarah! Your kind words truly made our day — it's wonderful to hear that our team's dedication shone through. We look forward to welcoming you back very soon!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how-it-works">
+  <div class="section-label">How it works</div>
+  <h2 class="section-title">Three steps to the perfect reply</h2>
+  <p class="section-subtitle">Install once, reply forever. No copy-pasting, no staring at a blank text box.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Install the extension</h3>
+      <p>Add GhostWriter to Chrome in one click. Sign up with your email and your free trial starts automatically.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Click "Draft Smart Reply"</h3>
+      <p>Visit your Google Business or Yelp profile. A button appears on every review automatically. Click it.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Review and post</h3>
+      <p>Your AI-drafted reply fills the text box instantly. Tweak if you want, then post. Done in under 10 seconds.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" style="padding-top:0;">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">Built for busy business owners</h2>
+  <p class="section-subtitle">Everything you need to stay on top of your reviews without spending hours writing responses.</p>
+  <div class="features-grid">
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <h3>One-click replies</h3>
+      <p>From review to posted response in under 10 seconds. No typing required.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🎯</div>
+      <h3>Matches your tone</h3>
+      <p>Choose from Professional, Friendly, Luxury, Casual, or Formal to match your brand voice.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔒</div>
+      <h3>Secure by design</h3>
+      <p>Your data stays private. We never store review content or post on your behalf.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🌐</div>
+      <h3>Google &amp; Yelp</h3>
+      <p>Works seamlessly on both platforms. One extension, all your reviews covered.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🤖</div>
+      <h3>Powered by Claude AI</h3>
+      <p>Anthropic's Claude generates human-sounding, empathetic replies that feel completely genuine.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">💳</div>
+      <h3>Simple flat pricing</h3>
+      <p>$6/month or $60/year. No usage limits, no surprise charges, cancel anytime.</p>
+    </div>
+  </div>
+  <div style="margin-top:56px;">
+    <div class="section-label">Brand tones</div>
+    <h3 style="font-size:20px;font-weight:600;margin-bottom:8px;">Your voice, your way</h3>
+    <p style="color:var(--gray);font-size:15px;">Pick the tone that fits your business and GhostWriter handles the rest.</p>
+    <div class="tones">
+      <div class="tone-pill">Professional</div>
+      <div class="tone-pill">Friendly</div>
+      <div class="tone-pill">Luxury</div>
+      <div class="tone-pill">Casual</div>
+      <div class="tone-pill">Formal</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section style="background:var(--gray-light);padding:100px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-label">Social proof</div>
+    <h2 class="section-title">Business owners love it</h2>
+    <p class="section-subtitle">From restaurants to retail — GhostWriter saves hours every week.</p>
+    <div class="testimonials">
+      <div class="testimonial">
+        <div class="testimonial-stars">★★★★★</div>
+        <p>"I used to dread Monday mornings because of all the reviews I had to respond to. Now I get through all of them in 10 minutes flat."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#1a73e8;">M</div>
+          <div>
+            <div class="testimonial-name">Marcus T.</div>
+            <div class="testimonial-biz">Restaurant owner, Chicago</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-stars">★★★★★</div>
+        <p>"The replies sound exactly like me — warm, professional, and genuine. My response rate went from 20% to 100% and customers notice."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#7c3aed;">J</div>
+          <div>
+            <div class="testimonial-name">Jennifer K.</div>
+            <div class="testimonial-biz">Spa owner, Miami</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-stars">★★★★★</div>
+        <p>"At $6/month this is the best value tool in my business. I've saved at least 3 hours a week and my Google rating has gone up."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#059669;">R</div>
+          <div>
+            <div class="testimonial-name">Ryan P.</div>
+            <div class="testimonial-biz">Auto shop owner, Austin</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 class="section-title">Simple, honest pricing</h2>
+  <p class="section-subtitle">Every plan includes a free trial — no charge until your trial ends.</p>
+  <p class="pricing-note">Free trial activates automatically at checkout · Card required to start · Cancel anytime</p>
+
+  <div class="pricing-cards">
+
+    <!-- ── MONTHLY ── -->
+    <div class="pricing-card">
+      <div class="pricing-card-top">
+        <div class="pricing-plan">Monthly Plan</div>
+        <div class="pricing-price"><sup>$</sup>6</div>
+        <div class="pricing-period">per month, billed monthly</div>
+        <div class="trial-tag">🎁 14-day free trial</div>
+        <hr class="pricing-divider"/>
+        <ul class="pricing-features">
+          <li><span class="tick">✓</span> Unlimited AI reply drafts</li>
+          <li><span class="tick">✓</span> Google Business integration</li>
+          <li><span class="tick">✓</span> Yelp integration</li>
+          <li><span class="tick">✓</span> 5 brand tone options</li>
+          <li><span class="tick">✓</span> Cancel anytime</li>
+          <li><span class="tick">✓</span> Email support</li>
+        </ul>
+      </div>
+      <div class="pricing-card-bottom">
+        <stripe-buy-button
+          buy-button-id="buy_btn_1TcFU3CMXt2rAiwPkOhtaXCX"
+          publishable-key="pk_live_51RAMa3CMXt2rAiwPorgWK0FqKBb2Plrtx8dfjNyi3UVNXcEWp1GLmkh8AQeTiYKg9JgWXcvjS519jvpzG6Q4ikby005ylGHQt4">
+        </stripe-buy-button>
+        <p class="fine-print">14 days free &nbsp;·&nbsp; then $6/month &nbsp;·&nbsp; cancel anytime</p>
+      </div>
+    </div>
+
+    <!-- ── ANNUAL ── -->
+    <div class="pricing-card featured">
+      <div class="pricing-badge">🏆 Best Value</div>
+      <div class="pricing-card-top">
+        <div class="pricing-plan">Annual Plan</div>
+        <div class="pricing-price"><sup>$</sup>60</div>
+        <div class="pricing-period">per year &nbsp;—&nbsp; just $5/month</div>
+        <div class="pricing-saving">Save $12 vs monthly</div>
+        <div class="trial-tag">🎁 30-day free trial</div>
+        <hr class="pricing-divider"/>
+        <ul class="pricing-features">
+          <li><span class="tick">✓</span> Unlimited AI reply drafts</li>
+          <li><span class="tick">✓</span> Google Business integration</li>
+          <li><span class="tick">✓</span> Yelp integration</li>
+          <li><span class="tick">✓</span> 5 brand tone options</li>
+          <li><span class="tick">✓</span> Cancel anytime</li>
+          <li><span class="tick">✓</span> Priority support</li>
+        </ul>
+      </div>
+      <div class="pricing-card-bottom">
+        <stripe-buy-button
+          buy-button-id="buy_btn_1TcFVtCMXt2rAiwPwVEVM7bZ"
+          publishable-key="pk_live_51RAMa3CMXt2rAiwPorgWK0FqKBb2Plrtx8dfjNyi3UVNXcEWp1GLmkh8AQeTiYKg9JgWXcvjS519jvpzG6Q4ikby005ylGHQt4">
+        </stripe-buy-button>
+        <p class="fine-print">30 days free &nbsp;·&nbsp; then $60/year &nbsp;·&nbsp; cancel anytime</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section">
+  <div style="text-align:center;margin-bottom:60px;">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title">Common questions</h2>
+  </div>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="faq-q">How does the free trial work? <span>+</span></div>
+      <div class="faq-a">Your free trial starts automatically the moment you complete checkout — 14 days on Monthly, 30 days on Annual. You won't be charged until the trial ends. Cancel before then and you pay nothing.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does it work on both Google Business and Yelp? <span>+</span></div>
+      <div class="faq-a">Yes — GhostWriter injects a "Draft Smart Reply" button into both Google Business and Yelp review management pages automatically. One extension covers both platforms.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Will the replies sound like a robot? <span>+</span></div>
+      <div class="faq-a">No. GhostWriter uses Anthropic's Claude AI which produces genuinely human-sounding, empathetic responses. You also choose your brand tone so every reply feels consistent with your voice.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does it post replies automatically? <span>+</span></div>
+      <div class="faq-a">Never. GhostWriter fills the reply box for you to review — you always have final approval before anything gets posted.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the difference between Monthly and Annual? <span>+</span></div>
+      <div class="faq-a">Both plans include identical features. Annual is billed once at $60/year — that's $5/month, saving you $12 versus monthly. Annual also includes a longer 30-day free trial vs 14 days on Monthly.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I cancel? <span>+</span></div>
+      <div class="faq-a">Log into your Stripe Customer Portal from the footer link. Cancel in two clicks — your subscription ends at the current billing period with no questions asked.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+  <h2>Start replying smarter today</h2>
+  <p>Join business owners saving hours every week. Your free trial starts the moment you sign up.</p>
+  <a href="#pricing" class="btn-white">Start Free Trial →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <span class="footer-brand-name">✨ GhostWriter</span>
+    <span class="footer-brand-sub">by Aldershot</span>
+  </div>
+  <div class="footer-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="https://billing.stripe.com" target="_blank">Customer Portal</a>
+    <a href="mailto:support@aldershot.co">Support</a>
+  </div>
+  <div class="footer-copy">© 2026 Aldershot. All rights reserved.</div>
+</footer>
+
+</body>
+</html>
