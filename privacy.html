@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Privacy Policy — GhostWriter | ghostreview.net</title>
+  <meta name="description" content="Privacy Policy for GhostWriter Review Responder by Aldershot. Learn how we collect, use, and protect your data." />
+  <link rel="canonical" href="https://ghostreview.net/privacy" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b0b0f;
+      color: #ffffff;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: #0b0b0f;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-icon {
+      width: 34px; height: 34px;
+      background: #4d7cff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .nav-wordmark { display: flex; flex-direction: column; line-height: 1; gap: 2px; }
+    .nav-name { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+    .nav-sub { font-size: 9px; font-weight: 600; color: #8f93a2; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .nav-back {
+      font-size: 14px;
+      color: #8f93a2;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.15s;
+    }
+    .nav-back:hover { color: #fff; }
+
+    /* HERO */
+    .page-hero {
+      padding: 64px 24px 48px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: radial-gradient(ellipse at top, rgba(77,124,255,0.1), transparent 60%);
+    }
+
+    .page-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #7f86ff;
+      margin-bottom: 14px;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .page-hero p {
+      font-size: 15px;
+      color: #8f93a2;
+    }
+
+    /* CONTENT */
+    .content {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+
+    .section {
+      margin-bottom: 52px;
+    }
+
+    .section h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      letter-spacing: -0.3px;
+    }
+
+    .section p {
+      font-size: 15px;
+      color: #b9bcc7;
+      line-height: 1.8;
+      margin-bottom: 14px;
+    }
+
+    .section p:last-child { margin-bottom: 0; }
+
+    .section ul {
+      list-style: none;
+      margin: 14px 0;
+      padding: 0;
+    }
+
+    .section ul li {
+      font-size: 15px;
+      color: #b9bcc7;
+      line-height: 1.7;
+      padding: 6px 0 6px 22px;
+      position: relative;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .section ul li:last-child { border-bottom: none; }
+
+    .section ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #4d7cff;
+      font-size: 13px;
+    }
+
+    .highlight-box {
+      background: rgba(77,124,255,0.07);
+      border: 1px solid rgba(77,124,255,0.2);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+
+    .highlight-box p {
+      font-size: 14px;
+      color: #b9bcc7;
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .highlight-box strong { color: #fff; }
+
+    .no-collect-box {
+      background: rgba(74,222,128,0.06);
+      border: 1px solid rgba(74,222,128,0.15);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+
+    .no-collect-box p {
+      font-size: 14px;
+      color: #b9bcc7;
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .no-collect-box strong { color: #4ade80; }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+
+    .data-table th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #8f93a2;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      color: #b9bcc7;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+
+    .data-table td:first-child { color: #fff; font-weight: 600; width: 35%; }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .tag-yes { background: rgba(74,222,128,0.12); color: #4ade80; }
+    .tag-no { background: rgba(239,68,68,0.12); color: #f87171; }
+
+    a { color: #4d7cff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 24px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a { font-size: 14px; color: #8f93a2; text-decoration: none; transition: color 0.15s; }
+    .footer-links a:hover { color: #fff; }
+
+    .footer-copy { font-size: 13px; color: #555a6b; }
+
+    @media (max-width: 600px) {
+      nav { padding: 14px 20px; }
+      .page-hero { padding: 48px 20px 36px; }
+      .data-table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="https://ghostreview.net" class="nav-brand">
+    <div class="nav-icon">✨</div>
+    <div class="nav-wordmark">
+      <span class="nav-name">GhostWriter</span>
+      <span class="nav-sub">by Aldershot</span>
+    </div>
+  </a>
+  <a href="https://ghostreview.net" class="nav-back">← Back to ghostreview.net</a>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <span class="page-label">Legal</span>
+  <h1>Privacy Policy</h1>
+  <p>Last updated: June 2026 &nbsp;·&nbsp; Effective: June 2026</p>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <div class="section">
+    <h2>1. Overview</h2>
+    <p>This Privacy Policy describes how Aldershot ("we", "us", or "our") collects, uses, and protects information in connection with GhostWriter Review Responder ("GhostWriter", "the extension", or "the Service"), accessible at <a href="https://ghostreview.net">ghostreview.net</a>.</p>
+    <p>We are committed to protecting your privacy. GhostWriter is designed to collect the absolute minimum data necessary to operate. We do not sell your data, we do not advertise to you, and we do not share your personal information with third parties except as described in this policy.</p>
+
+    <div class="highlight-box">
+      <p><strong>Plain English summary:</strong> We only store your email address to verify your subscription. We never read, store, or share the content of your reviews or replies. You are always in control.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>2. Information We Collect</h2>
+    <p>We collect only the following information:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Why we collect it</th>
+          <th>Where it's stored</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Email address</td>
+          <td>To verify your active subscription before generating a reply</td>
+          <td>Our secure Supabase database</td>
+        </tr>
+        <tr>
+          <td>Subscription status</td>
+          <td>To determine whether your plan is active, past due, or inactive</td>
+          <td>Our secure Supabase database</td>
+        </tr>
+        <tr>
+          <td>Brand tone preference</td>
+          <td>To generate replies in your chosen style (Professional, Friendly, etc.)</td>
+          <td>Our secure Supabase database</td>
+        </tr>
+        <tr>
+          <td>Payment information</td>
+          <td>To process your subscription</td>
+          <td>Stripe — we never see or store card details</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="no-collect-box">
+      <p><strong>We do NOT collect:</strong> the content of any customer reviews, the content of any AI-generated replies, your browsing history, any data from pages you visit other than Google Business and Yelp review management pages, or any personally identifiable information beyond your email address.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>3. How the Chrome Extension Works</h2>
+    <p>The GhostWriter Chrome extension operates as follows:</p>
+    <ul>
+      <li>When you visit a Google Business or Yelp review page, the extension injects a "Draft Smart Reply" button next to each review</li>
+      <li>When you click the button, the extension reads the text of that specific review from the page and sends it — along with your saved email address — to our secure backend API hosted on Vercel</li>
+      <li>Our backend verifies your subscription status, then forwards the review text to Anthropic's Claude AI to generate a reply</li>
+      <li>The generated reply is returned to your browser and inserted into the platform's reply text box</li>
+      <li>Review text is processed in real time and is never stored, logged, or retained by us after the reply is generated</li>
+    </ul>
+    <p>Your email address is stored locally on your device using Chrome's <code>chrome.storage.local</code> API and is sent to our backend only when you click the "Draft Smart Reply" button.</p>
+  </div>
+
+  <div class="section">
+    <h2>4. How We Use Your Information</h2>
+    <p>We use the information we collect for the following purposes only:</p>
+    <ul>
+      <li>To verify your active subscription before processing a reply request</li>
+      <li>To generate AI-powered review replies tailored to your brand tone</li>
+      <li>To manage your account and subscription via Stripe</li>
+      <li>To respond to support requests you send to us directly</li>
+      <li>To send transactional emails related to your subscription (billing, trial expiry)</li>
+    </ul>
+    <p>We do not use your information for advertising, analytics profiling, or any purpose not listed above.</p>
+  </div>
+
+  <div class="section">
+    <h2>5. Data Sharing and Third Parties</h2>
+    <p>We share data with the following third-party services only to operate the Service:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Third Party</th>
+          <th>Purpose</th>
+          <th>Data Shared</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Stripe</td>
+          <td>Payment processing and subscription management</td>
+          <td>Email address, payment information</td>
+        </tr>
+        <tr>
+          <td>Anthropic</td>
+          <td>AI reply generation via Claude API</td>
+          <td>Review text (not linked to your identity)</td>
+        </tr>
+        <tr>
+          <td>Supabase</td>
+          <td>Secure database hosting for account records</td>
+          <td>Email, subscription status, brand tone</td>
+        </tr>
+        <tr>
+          <td>Vercel</td>
+          <td>Serverless API hosting</td>
+          <td>Processes requests in transit — no persistent storage</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>We do not sell, rent, trade, or otherwise transfer your personal information to any other party for any purpose.</p>
+  </div>
+
+  <div class="section">
+    <h2>6. Data Retention</h2>
+    <p>We retain your account data (email, subscription status, brand tone preference) for as long as your account is active. If you cancel your subscription and request account deletion, we will permanently delete your data within 30 days.</p>
+    <p>Review text sent to generate replies is processed in real time and is not stored or retained by us at any point.</p>
+  </div>
+
+  <div class="section">
+    <h2>7. Your Rights</h2>
+    <p>You have the following rights regarding your personal data:</p>
+    <ul>
+      <li><strong>Access:</strong> You may request a copy of the data we hold about you</li>
+      <li><strong>Correction:</strong> You may request that we correct inaccurate data</li>
+      <li><strong>Deletion:</strong> You may request that we delete your account and all associated data</li>
+      <li><strong>Portability:</strong> You may request your data in a portable format</li>
+      <li><strong>Objection:</strong> You may object to any processing of your data</li>
+    </ul>
+    <p>To exercise any of these rights, email us at <a href="mailto:privacy@ghostreview.net">privacy@ghostreview.net</a>. We will respond within 30 days.</p>
+  </div>
+
+  <div class="section">
+    <h2>8. Security</h2>
+    <p>We take reasonable technical and organisational measures to protect your personal information against unauthorised access, loss, or misuse. These include:</p>
+    <ul>
+      <li>All data transmitted between your browser and our servers is encrypted via HTTPS/TLS</li>
+      <li>Database access is protected by Row Level Security (RLS) and service-role key authentication</li>
+      <li>We use Stripe for all payment processing — we never see or store your credit card details</li>
+      <li>API keys and credentials are stored as environment variables and never exposed in code</li>
+    </ul>
+    <p>No method of transmission over the internet is 100% secure. If you believe your data has been compromised, contact us immediately at <a href="mailto:privacy@ghostreview.net">privacy@ghostreview.net</a>.</p>
+  </div>
+
+  <div class="section">
+    <h2>9. Children's Privacy</h2>
+    <p>GhostWriter is not directed at children under the age of 13. We do not knowingly collect personal information from children. If you believe a child has provided us with personal information, contact us and we will delete it promptly.</p>
+  </div>
+
+  <div class="section">
+    <h2>10. Chrome Extension Permissions</h2>
+    <p>GhostWriter requests the following Chrome permissions and uses them solely as described:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Permission</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>storage</td>
+          <td>Stores your account email locally on your device using chrome.storage.local so you don't have to re-enter it each session</td>
+        </tr>
+        <tr>
+          <td>business.google.com</td>
+          <td>Injects the reply button into Google Business review pages and reads review text when you click the button</td>
+        </tr>
+        <tr>
+          <td>yelp.com</td>
+          <td>Injects the reply button into Yelp review pages and reads review text when you click the button</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The extension does not access any other websites, does not track your browsing activity, and does not run on any pages other than Google Business and Yelp review management pages.</p>
+  </div>
+
+  <div class="section">
+    <h2>11. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top of this page. For material changes, we will notify you by email at the address associated with your account. Continued use of GhostWriter after changes are posted constitutes your acceptance of the updated policy.</p>
+  </div>
+
+  <div class="section">
+    <h2>12. Contact Us</h2>
+    <p>If you have any questions, concerns, or requests regarding this Privacy Policy or your personal data, please contact us:</p>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:privacy@ghostreview.net">privacy@ghostreview.net</a></li>
+      <li><strong>Support:</strong> <a href="mailto:support@ghostreview.net">support@ghostreview.net</a></li>
+      <li><strong>Website:</strong> <a href="https://ghostreview.net">ghostreview.net</a></li>
+      <li><strong>Company:</strong> Aldershot</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="https://ghostreview.net">Home</a>
+    <a href="https://ghostreview.net#pricing">Pricing</a>
+    <a href="https://billing.stripe.com" target="_blank" rel="noopener">Customer Portal</a>
+    <a href="mailto:support@ghostreview.net">support@ghostreview.net</a>
+    <a href="https://ghostreview.net/privacy" aria-current="page">Privacy Policy</a>
+  </div>
+  <p class="footer-copy">© 2026 Aldershot. All rights reserved. &nbsp;·&nbsp; ghostreview.net</p>
+</footer>
+
+</body>
+</html>
